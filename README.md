@@ -11,7 +11,7 @@ The Backend of the Backend. The server contains authorization, messaging, manage
 Written in Typescript and some cpp Modules
 
 ## Browser
-RedwoodJS Browser App
+NextJS Browser App
 
 ## Desktop
 TauriJS Desktop App
