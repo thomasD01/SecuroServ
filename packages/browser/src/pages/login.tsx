@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+import { Router, withRouter } from 'next/router';
+import { signIn } from 'next-auth/react'
 
-type Props = {}
+type Props = {
+  router: Router
+}
 type State = {
   version: string;
   userInput: string;
@@ -9,7 +13,7 @@ type State = {
   showPass: boolean;
 }
 
-export default class HomePage extends Component<Props, State> {
+class LoginPage extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -75,6 +79,8 @@ export default class HomePage extends Component<Props, State> {
           autoClose: 3000
         })
         //Save JWT and redirect to home
+        signIn();
+        this.props.router.push('/');
       }
     } catch (error) {
       toast.update(id, {
@@ -127,3 +133,5 @@ export default class HomePage extends Component<Props, State> {
     )
   }
 }
+
+export default withRouter(LoginPage)
