@@ -43,3 +43,6 @@ tor/*
 # Certificates
 .cert/*
 !.cert/*.sh
+
+# development Database
+dev.db
