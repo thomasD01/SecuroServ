@@ -5,17 +5,17 @@ const provider = ():Provider => {
   let token_url = 'http://localhost:3000/oauth/token';
   let info_url  = 'http://localhost:3000/user/me';
   if(process.env.NODE_ENV === 'production'){
-    auth_url  = `http://${process.env.HOSTNAME}:${process.env.PORT}/oauth/authorize`;
-    token_url = `http://${process.env.HOSTNAME}:${process.env.PORT}/oauth/token`;
-    info_url  = `http://${process.env.HOSTNAME}:${process.env.PORT}/user/me`;
+    auth_url  = `${process.env.OAUTH_URL}/oauth/authorize`;
+    token_url = `${process.env.OAUTH_URL}/oauth/token`;
+    info_url  = `${process.env.OAUTH_URL}/user/me`;
   }
   return {
     id: "securoserv",
     name: "SecuroServ",
     type: "oauth",
-    authorization: "https://kauth.kakao.com/oauth/authorize",
-    token: "https://kauth.kakao.com/oauth/token",
-    userinfo: "https://kapi.kakao.com/v2/user/me",
+    authorization: auth_url,
+    token: token_url,
+    userinfo: info_url,
     profile(profile) {
       return {
         id: profile.sub,

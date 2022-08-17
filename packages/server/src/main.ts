@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { ValidationPipe } from '@nestjs/common';
 import * as morgan from 'morgan'
 
 declare const module: any
@@ -9,6 +10,7 @@ async function bootstrap() {
     
   app.use(morgan('short'));
   app.enableCors();
+
   await app.listen(3000);
 
   if (module.hot) {

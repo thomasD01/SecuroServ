@@ -2,8 +2,7 @@
 declare global{
   namespace NodeJS {
     interface ProcessEnv {
-      HOSTNAME: string;
-      PORT: string;
+      OAUTH_URL: string
     }
   }
 }

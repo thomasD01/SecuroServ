@@ -80,7 +80,6 @@ class LoginPage extends Component<Props, State> {
         })
         //Save JWT and redirect to home
         signIn();
-        this.props.router.push('/');
       }
     } catch (error) {
       toast.update(id, {
