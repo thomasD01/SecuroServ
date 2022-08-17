@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body{
+	background: #222222
+}
+
+.page {
+	background: linear-gradient( #20574b, #59a897, #20574b, #59a897, #20574b);
+	background-size: 100% 200%;
+	animation: gradient 30s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+	height: 100vh;
+  width: 100vw;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 0%;
+	}
+	50% {
+		background-position: 100% 100%;
+	}
+	100% {
+		background-position: 0% 0%;
+	}
+}
+@layer components{
+}
