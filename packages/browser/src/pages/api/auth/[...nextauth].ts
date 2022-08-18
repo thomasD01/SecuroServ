@@ -4,6 +4,6 @@ import SecuroServProvider from '../../../securoServProvider'
 
 export default NextAuth({
   providers: [
-    SecuroServProvider()
+    SecuroServProvider(process.env.OAUTH_CLIENT_ID,process.env.OAUTH_SECRET)
   ],
 });

@@ -1,13 +1,13 @@
 import { Provider } from "next-auth/providers";
 
-const provider = ():Provider => {
-  let auth_url  = 'http://localhost:3000/oauth/authorize';
-  let token_url = 'http://localhost:3000/oauth/token';
-  let info_url  = 'http://localhost:3000/user/me';
-  if(process.env.NODE_ENV === 'production'){
-    auth_url  = `${process.env.OAUTH_URL}/oauth/authorize`;
+const provider = (clientId: string, clientSecret: string): Provider => {
+  let auth_url = 'http://localhost:3001/oauth/authorize';
+  let token_url = 'http://localhost:3001/oauth/token';
+  let info_url = 'http://localhost:3001/user/me';
+  if (process.env.NODE_ENV === 'production') {
+    auth_url = `${process.env.OAUTH_URL}/oauth/authorize`;
     token_url = `${process.env.OAUTH_URL}/oauth/token`;
-    info_url  = `${process.env.OAUTH_URL}/user/me`;
+    info_url = `${process.env.OAUTH_URL}/user/me`;
   }
   return {
     id: "securoserv",
@@ -16,9 +16,11 @@ const provider = ():Provider => {
     authorization: auth_url,
     token: token_url,
     userinfo: info_url,
+    clientId,
+    clientSecret,
     profile(profile) {
       return {
-        id: profile.sub,
+        id: profile.id,
         name: profile.name,
         prename: profile.prename,
         username: profile.username,

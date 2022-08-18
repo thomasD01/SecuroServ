@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "install": "concurrently \"cd packages/browser && npm install && cd ../..\" \"cd packages/desktop && npm install && cd ../..\" \"cd packages/mobile && npm install && cd ../..\" \"cd packages/server && npm install && cd ../..\"",
     "dev:browser": "concurrently \"cd packages/server && npm run dev && cd ../..\" \"cd packages/browser && npm run dev && cd ../..\"",
     "dev:desktop": "concurrently \"cd packages/server && npm run dev && cd ../..\" \"cd packages/desktop && npm run dev && cd ../..\"",
     "dev:mobile": "concurrently \"cd packages/server && npm run dev && cd ../..\" \"cd packages/mobile && npm run dev && cd ../..\""
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "concurrently": "^7.3.0"
+  }
 }

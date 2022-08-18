@@ -61,3 +61,12 @@ model Role {
   //Links
   user User[]
 }
+
+model Authorized_Clients {
+  //Attributes
+  id            Int    @id @default(autoincrement())
+  client_id     String @unique
+  client_secret String
+  //References
+  //Links
+}
