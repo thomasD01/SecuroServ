@@ -1,0 +1,88 @@
+html,body{
+  background-color: #222222;
+  margin: 0;
+  padding: 0;
+  font-family: Poppins;
+}
+
+h1{
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: normal;
+}
+
+.page {
+	background: linear-gradient( #20574b, #59a897, #20574b, #59a897, #20574b);
+	background-size: 100% 200%;
+	animation: gradient 30s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+	height: 100vh;
+  width: 100vw;
+}
+.container{
+  height: 500px;
+  width: 550px;
+  border-top: 4px solid #dd2222;
+  background: #222222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+}
+.inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 50%;
+  width: 70%;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+.input {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 20px;
+  line-height: 32px;
+}
+.inputField {
+  width: 70%;
+  background-color: #666666;
+  padding-left: 10px;
+  font-size: 18px;
+  line-height: 32px;
+  color: #ffffff;
+  border: none;
+}
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.button {
+  background-color: #dd2222;
+  font-size: x-large;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 0%;
+	}
+	50% {
+		background-position: 100% 100%;
+	}
+	100% {
+		background-position: 0% 0%;
+	}
+}

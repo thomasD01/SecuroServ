@@ -29,11 +29,11 @@ async function main(){
       level: 2,
     }
   })
-  const employee = await prisma.role.upsert({
-    where: { name: 'employee'},
+  const member = await prisma.role.upsert({
+    where: { name: 'member'},
     update: {},
     create: {
-      name: 'employee',
+      name: 'member',
       level: 1,
     }
   })
@@ -71,6 +71,15 @@ async function main(){
       role: { connect: {id: ceo.id} }
     },
   })
+
+  const authorizedDevClient = await prisma.authorized_Clients.upsert({
+    where: { client_id: '13'},
+    update: {},
+    create: {
+      client_id: '13',
+      client_secret: 'changeme'
+    }
+  });
   console.log({ thomas, jouline });
 }
 

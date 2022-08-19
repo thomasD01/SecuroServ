@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import * as React from 'react'
+import * as ReactDOMServer from 'react-dom/server';
 import { ToastContainer, toast } from 'react-toastify'
-import { Router, withRouter } from 'next/router';
-import { signIn } from 'next-auth/react'
 
 type Props = {
-  router: Router
+  client_id: string;
+  redirect_uri: string;
+  state: string;
 }
 type State = {
   version: string;
@@ -13,7 +14,7 @@ type State = {
   showPass: boolean;
 }
 
-class LoginPage extends Component<Props, State> {
+export class LoginPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -37,7 +38,7 @@ class LoginPage extends Component<Props, State> {
   async sendLogin(username: string, password: string): Promise<{ auth: string, refresh: string } | null> {
     return new Promise<{ auth: string, refresh: string } | null>(async function (resolve, reject) {
       setTimeout(() => reject(), 10000);
-      const res = await fetch('http://127.0.0.1:3000/login', {
+      const res = await fetch('/login', {
         method: 'POST',
         body: JSON.stringify({
           username: username,
@@ -79,7 +80,8 @@ class LoginPage extends Component<Props, State> {
           autoClose: 3000
         })
         //Save JWT and redirect to home
-        signIn();
+        
+        //login success
       }
     } catch (error) {
       toast.update(id, {
@@ -93,44 +95,47 @@ class LoginPage extends Component<Props, State> {
 
   render() {
     return (
-      <div className="page justify-center items-center">
-        <div
-          className="h-[500px] w-[550px] shadow-xl flex border-t-4 
-                     border-t-red-600 bg-[#222222] flex-col items-center text-white"
-        >
-          <img src="img/SecuroServLogo.png" height="200px" width="200px"></img>
-          <h1 className="text-2xl">Please log in</h1>
-          <div className="flex-col flex justify-evenly h-[50%] w-full px-[15%]">
-            <div className="w-full flex flex-row justify-between text-2xl">
-              Username
-              <input
-                className="w-[70%] bg-[#666666] pl-2 text-xl"
-                type="text"
-                value={this.state.userInput}
-                onChange={this.editUsername}
-              />
-            </div>
-            <div className="w-full flex flex-row justify-between text-2xl">
-              Password
-              <input
-                className="w-[70%] bg-[#666666] pl-2 text-xl"
-                type={this.state.showPass ? 'text' : 'password'}
-                value={this.state.passInput}
-                onChange={this.editPassword}
-              />
-            </div>
-            <div className="text-white flex flex-row justify-between w-full">
-              Version {this.state.version}
-              <button className="bg-red-600 text-xl px-4 py-1" onClick={this.submit}>
-                Log In
-              </button>
+      <>
+        <div className="page justify-center items-center">
+          <div className="container">
+            <img src="/SecuroServLogo.png" height="200px" width="200px"></img>
+            <h1>Please log in</h1>
+            <div className="inputs">
+              <div className="input">
+                Username
+                <input
+                  className="inputField"
+                  type="text"
+                  value={this.state.userInput}
+                  onChange={this.editUsername}
+                />
+              </div>
+              <div className="input">
+                Password
+                <input
+                  className="inputField"
+                  type={this.state.showPass ? 'text' : 'password'}
+                  value={this.state.passInput}
+                  onChange={this.editPassword}
+                />
+              </div>
+              <div className="footer">
+                Version {this.state.version}
+                <button className="button" onClick={this.submit}>
+                  Log In
+                </button>
+              </div>
             </div>
           </div>
+          <ToastContainer theme='dark' />
         </div>
-        <ToastContainer theme='dark' />
-      </div>
+      </>
     )
   }
 }
 
-export default withRouter(LoginPage)
+export const staticRender = (
+  client_id: string,
+  redirect_uri: string,
+  state: string
+) => ReactDOMServer.renderToString(<LoginPage client_id={client_id} redirect_uri={redirect_uri} state={state}/>)

@@ -12,5 +12,5 @@ export async function getRefreshToken(clientID: number){
     select: {RefreshToken: true},
     where: {id: clientID}
   })
-  return result.RefreshToken;
+  return result!.RefreshToken;
 }

@@ -21,11 +21,11 @@ export class AppController {
   @Public()
   @Get('/oauth/authorize')
   async getAuthorize(
-    @Query('client_id') client_id: string,
-    @Query('redirect_uri') redirect_uri: string,
-    @Query('state') state: string,
-    @Query('scope') scope: string,
-    @Query('response_type') response_type: string,
+    @Query('client_id') client_id: string = '',
+    @Query('redirect_uri') redirect_uri: string = '',
+    @Query('state') state: string = '',
+    @Query('scope') scope: string = '',
+    @Query('response_type') response_type: string = '',
     @Res() response: Response
   ){
     const authorizedClient = await prismaClient.authorized_Clients.findUnique({
@@ -34,6 +34,7 @@ export class AppController {
     if(!authorizedClient){
       return response.status(401).end();
     }
-    return this.appService.getAuthorize();
+    
+    return this.appService.getAuthorize(client_id, redirect_uri, state, response);
   }
 }

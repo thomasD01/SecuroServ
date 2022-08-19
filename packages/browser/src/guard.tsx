@@ -13,7 +13,7 @@ export function withGuard<P extends WrappedProps>(WrappedComponent: ComponentTyp
 
     if (session === null) {
       const router = useRouter();
-      router.push('/login');
+      router.push('/');
       return (<>Redirecting...</>)
     }
 

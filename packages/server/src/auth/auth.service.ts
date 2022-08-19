@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { createHmac } from 'crypto'
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './users/users.service';
-import type { Payload } from '../enviroment';
+import type { Payload } from '../../enviroment';
 import { getRefreshToken } from '../db/database';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class AuthService {
 /*************************************************************************************************
  * Login/Logout                                                                                  *
  *************************************************************************************************/
-  async login(payload: Payload): Promise<{auth_token: string, refresh_token: string}>{
+  async login(payload: Payload): Promise<{auth_token: string, refresh_token: string}|null>{
     const refreshToken = this.generateRefreshToken(payload)
     const res = await this.usersService.claimUser(payload.id, refreshToken);
     if(!res){
