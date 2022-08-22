@@ -76,17 +76,13 @@ export class LoginPage extends React.Component<Props, State> {
           autoClose: 3000
         })
         const redirect_uri = document.getElementById('redirect_uri')?.className;
-        const response = await fetch(redirect_uri+`?code=${res.code}`,{
-          headers:{
-            'Access-Control-Allow-Origin':'*'
-          }
-        });
+        const response = await fetch(redirect_uri+`?code=${res.code}`);
         console.log('res: ',response);
       }
     } catch (error) {
       toast.update(id, {
         type: toast.TYPE.WARNING,
-        render: `timeout, please try again ${error}`,
+        render: 'timeout, please try again',
         isLoading: false,
         autoClose: 3000
       })

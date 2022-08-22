@@ -11,7 +11,7 @@ const indexPage: FC<Props> = () => {
   if(status === 'authenticated'){
     router.push('/home');
   } else {
-    signIn('securoserv')
+    signIn('securoserv');
   }
 
   return <></>
