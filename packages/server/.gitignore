@@ -47,5 +47,6 @@ tor/*
 # development Database
 dev.db
 
-# tmp bundle Folder
+# bundle
 bundle/
+bundle.js

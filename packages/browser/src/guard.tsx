@@ -1,7 +1,6 @@
 import React, { ComponentType, FC } from 'react'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Session } from 'next-auth'
-import { useRouter } from 'next/router';
 
 interface WrappedProps{
   session: Session;
@@ -9,16 +8,15 @@ interface WrappedProps{
 
 export function withGuard<P extends WrappedProps>(WrappedComponent: ComponentType<P>){
   const HOComponent: FC<any> = ({ ...props }) => {
-    const { data: session } = useSession();
+    const { data, status } = useSession();
 
-    if (session === null) {
-      const router = useRouter();
-      router.push('/');
+    if (data === null) {
+      signIn('securoserv')
       return (<>Redirecting...</>)
     }
 
     return (
-      <WrappedComponent session={session}  {...props} />
+      <WrappedComponent session={data}  {...props} />
     )
   }
   return HOComponent

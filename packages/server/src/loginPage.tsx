@@ -33,8 +33,8 @@ export class LoginPage extends React.Component<Props, State> {
    * create Promise for toast notification to display information about login status
    * @returns JWT as string
    */
-  async sendLogin(username: string, password: string): Promise<{ code: string } | null> {
-    return new Promise<{ code: string } | null>(async function (resolve, reject) {
+  async sendLogin(username: string, password: string): Promise<{ url: string } | null> {
+    return new Promise<{ url: string } | null>(async function (resolve, reject) {
       setTimeout(() => reject(), 10000);
       const res = await fetch('/login', {
         method: 'POST',
@@ -48,10 +48,9 @@ export class LoginPage extends React.Component<Props, State> {
       })
       const decodedRes = await res.json();
       if (decodedRes.code) {
-        resolve({
-          code: decodedRes.code
-        })
-        return;
+        const redirect_uri = document.getElementById('redirect_uri')?.className;
+        const response = await fetch(redirect_uri+`?code=${decodedRes.code}`);
+        return resolve({url: response.url});
       }
       resolve(null);
     });
@@ -75,11 +74,12 @@ export class LoginPage extends React.Component<Props, State> {
           isLoading: false,
           autoClose: 3000
         })
-        const redirect_uri = document.getElementById('redirect_uri')?.className;
-        const response = await fetch(redirect_uri+`?code=${res.code}`);
-        console.log('res: ',response);
+        setTimeout(()=>{
+          window.location.replace(res.url);
+        }, 2000)
       }
     } catch (error) {
+      console.error(error);
       toast.update(id, {
         type: toast.TYPE.WARNING,
         render: 'timeout, please try again',

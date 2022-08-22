@@ -6,9 +6,12 @@ import '../index.css'
 import 'react-toastify/dist/ReactToastify.css'
 import makeStore from '../redux/store'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({
+  Component, 
+  pageProps: {session, ...pageProps} 
+}: AppProps) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <ReduxProvider store={makeStore()} >
         <Component {...pageProps} />
       </ReduxProvider>
@@ -16,4 +19,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default App

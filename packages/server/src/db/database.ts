@@ -12,23 +12,29 @@ export async function getRefreshToken(clientID: number) {
     select: { RefreshToken: true },
     where: { id: clientID }
   })
-  return result!.RefreshToken;
+  if(result){
+    return Promise.resolve(result.RefreshToken);
+  }
+  return Promise.reject('nothing found');
 }
 
 export async function getRequest(code: string) {
   const result = await prismaClient.access_Request.findUnique({
-    select: {
-      access_token: true,
-      refresh_token: true
-    },
     where: { code: code }
   })
+  return Promise.resolve(result);
+}
+
+export async function getAndDeleteRequest(code: string) {
+  const result = await getRequest(code);
 
   if(result){
-    await prismaClient.access_Request.delete({where: {code: code}})
+    const deleted = await prismaClient.access_Request.delete({
+      where: { code: result.code }
+    })
+    return Promise.resolve(deleted);
   }
-
-  return result
+  return Promise.reject('nothing found');
 }
 
 export async function createRequest(code: string, access_token: string, refresh_token: string){
@@ -39,4 +45,8 @@ export async function createRequest(code: string, access_token: string, refresh_
       refresh_token
     }
   })
+  if(result){
+    return Promise.resolve(result);
+  }
+  return Promise.reject('nothing found');
 }
