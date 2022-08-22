@@ -3,9 +3,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { ToastContainer, toast } from 'react-toastify'
 
 type Props = {
-  client_id: string;
-  redirect_uri: string;
-  state: string;
+  redirect_uri: string
 }
 type State = {
   version: string;
@@ -35,8 +33,8 @@ export class LoginPage extends React.Component<Props, State> {
    * create Promise for toast notification to display information about login status
    * @returns JWT as string
    */
-  async sendLogin(username: string, password: string): Promise<{ auth: string, refresh: string } | null> {
-    return new Promise<{ auth: string, refresh: string } | null>(async function (resolve, reject) {
+  async sendLogin(username: string, password: string): Promise<{ code: string } | null> {
+    return new Promise<{ code: string } | null>(async function (resolve, reject) {
       setTimeout(() => reject(), 10000);
       const res = await fetch('/login', {
         method: 'POST',
@@ -49,11 +47,9 @@ export class LoginPage extends React.Component<Props, State> {
         }
       })
       const decodedRes = await res.json();
-      console.log('peter', decodedRes)
-      if (decodedRes.auth_token && decodedRes.refresh_token) {
+      if (decodedRes.code) {
         resolve({
-          auth: decodedRes.auth_token,
-          refresh: decodedRes.refresh_token
+          code: decodedRes.code
         })
         return;
       }
@@ -79,14 +75,13 @@ export class LoginPage extends React.Component<Props, State> {
           isLoading: false,
           autoClose: 3000
         })
-        //Save JWT and redirect to home
-        
-        //login success
+        const redirect_uri = document.getElementById('redirect_uri')?.className;
+        await fetch(redirect_uri+`?code=${res.code}`);
       }
     } catch (error) {
       toast.update(id, {
         type: toast.TYPE.WARNING,
-        render: 'timeout, please try again',
+        render: `timeout, please try again ${error}`,
         isLoading: false,
         autoClose: 3000
       })
@@ -96,6 +91,7 @@ export class LoginPage extends React.Component<Props, State> {
   render() {
     return (
       <>
+        <div id='redirect_uri' className={this.props.redirect_uri}/>
         <div className="page justify-center items-center">
           <div className="container">
             <img src="/SecuroServLogo.png" height="200px" width="200px"></img>
@@ -134,8 +130,4 @@ export class LoginPage extends React.Component<Props, State> {
   }
 }
 
-export const staticRender = (
-  client_id: string,
-  redirect_uri: string,
-  state: string
-) => ReactDOMServer.renderToString(<LoginPage client_id={client_id} redirect_uri={redirect_uri} state={state}/>)
+export const staticRender = (redirect_uri) => ReactDOMServer.renderToString(<LoginPage redirect_uri={redirect_uri}/>)

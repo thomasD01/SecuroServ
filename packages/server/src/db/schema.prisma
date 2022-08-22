@@ -70,3 +70,13 @@ model Authorized_Clients {
   //References
   //Links
 }
+
+model Access_Request {
+  //Attributes
+  id            Int    @id @default(autoincrement())
+  code          String @unique
+  access_token  String 
+  refresh_token String
+  //References
+  //Links
+}

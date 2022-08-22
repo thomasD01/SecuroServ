@@ -13,9 +13,18 @@ const provider = (clientId: string, clientSecret: string): Provider => {
     id: "securoserv",
     name: "SecuroServ",
     type: "oauth",
-    authorization: auth_url,
-    token: token_url,
-    userinfo: info_url,
+    authorization: {
+      url: auth_url,
+      params: {scope: 'identity'}
+    },
+    token: {
+      url: token_url,
+      params: {}
+    },
+    userinfo: {
+      url: info_url,
+      params: {}
+    },
     clientId,
     clientSecret,
     profile(profile) {

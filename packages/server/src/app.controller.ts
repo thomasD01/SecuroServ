@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Query, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { Public } from './decorators';
 import { AppService } from './app.service';
 import { prismaClient } from './db/database';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller()
 export class AppController {
@@ -14,8 +14,8 @@ export class AppController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req){
-    return this.authService.login(req.user);
+  async login(@Req() request){
+    return this.authService.login(request.user);
   }
 
   @Public()
@@ -36,5 +36,19 @@ export class AppController {
     }
     
     return this.appService.getAuthorize(client_id, redirect_uri, state, response);
+  }
+
+  @Public()
+  @Post('/oauth/token')
+  async getAccessToken(
+    @Body() body: {
+      grant_type: string,
+      code: string,
+      redirect_uri: string
+    },
+    @Res() response: Response
+  ){
+    const token = await this.appService.getAccessToken(body.code);
+    return response.status(200).send(JSON.stringify(token)).end();
   }
 }

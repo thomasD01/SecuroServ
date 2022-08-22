@@ -15,7 +15,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 //@ts-ignore
 ReactDOMClient.hydrateRoot(document.getElementById('root'), /*#__PURE__*/React.createElement(_loginPage.LoginPage, null));
-},{"./loginPage":"D:\\Repos\\SecuroServ\\packages\\server\\bundle\\loginPage.js","react":16,"react-dom/client":10}],"D:\\Repos\\SecuroServ\\packages\\server\\bundle\\loginPage.js":[function(require,module,exports){
+},{"./loginPage":"/Users/thomas/Repos/SecuroServ/packages/server/bundle/loginPage.js","react":16,"react-dom/client":10}],"/Users/thomas/Repos/SecuroServ/packages/server/bundle/loginPage.js":[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -88,7 +88,8 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "submit", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var id, res;
+      var id, res, _document$getElementB, redirect_uri;
+
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -101,44 +102,54 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
             case 4:
               res = _context.sent;
 
-              if (res === null) {
-                _reactToastify.toast.update(id, {
-                  type: _reactToastify.toast.TYPE.ERROR,
-                  render: 'wrong credentials',
-                  isLoading: false,
-                  autoClose: 3000
-                });
-              } else {
-                _reactToastify.toast.update(id, {
-                  type: _reactToastify.toast.TYPE.SUCCESS,
-                  render: 'success',
-                  isLoading: false,
-                  autoClose: 3000
-                }); //Save JWT and redirect to home
-                //login success
-
+              if (!(res === null)) {
+                _context.next = 9;
+                break;
               }
 
-              _context.next = 11;
-              break;
-
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](1);
-
               _reactToastify.toast.update(id, {
-                type: _reactToastify.toast.TYPE.WARNING,
-                render: 'timeout, please try again',
+                type: _reactToastify.toast.TYPE.ERROR,
+                render: 'wrong credentials',
                 isLoading: false,
                 autoClose: 3000
               });
 
-            case 11:
+              _context.next = 13;
+              break;
+
+            case 9:
+              _reactToastify.toast.update(id, {
+                type: _reactToastify.toast.TYPE.SUCCESS,
+                render: 'success',
+                isLoading: false,
+                autoClose: 3000
+              });
+
+              redirect_uri = (_document$getElementB = document.getElementById('redirect_uri')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.className;
+              _context.next = 13;
+              return fetch(redirect_uri + "?code=".concat(res.code));
+
+            case 13:
+              _context.next = 18;
+              break;
+
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context["catch"](1);
+
+              _reactToastify.toast.update(id, {
+                type: _reactToastify.toast.TYPE.WARNING,
+                render: "timeout, please try again ".concat(_context.t0),
+                isLoading: false,
+                autoClose: 3000
+              });
+
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[1, 8]]);
+      }, _callee, null, [[1, 15]]);
     })));
 
     _this.state = {
@@ -192,23 +203,21 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
 
                           case 6:
                             decodedRes = _context2.sent;
-                            console.log('peter', decodedRes);
 
-                            if (!(decodedRes.auth_token && decodedRes.refresh_token)) {
-                              _context2.next = 11;
+                            if (!decodedRes.code) {
+                              _context2.next = 10;
                               break;
                             }
 
                             resolve({
-                              auth: decodedRes.auth_token,
-                              refresh: decodedRes.refresh_token
+                              code: decodedRes.code
                             });
                             return _context2.abrupt("return");
 
-                          case 11:
+                          case 10:
                             resolve(null);
 
-                          case 12:
+                          case 11:
                           case "end":
                             return _context2.stop();
                         }
@@ -239,6 +248,9 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+        id: "redirect_uri",
+        className: this.props.redirect_uri
+      }), /*#__PURE__*/React.createElement("div", {
         className: "page justify-center items-center"
       }, /*#__PURE__*/React.createElement("div", {
         className: "container"
@@ -278,11 +290,9 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
 
 exports.LoginPage = LoginPage;
 
-var staticRender = function staticRender(client_id, redirect_uri, state) {
+var staticRender = function staticRender(redirect_uri) {
   return ReactDOMServer.renderToString( /*#__PURE__*/React.createElement(LoginPage, {
-    client_id: client_id,
-    redirect_uri: redirect_uri,
-    state: state
+    redirect_uri: redirect_uri
   }));
 };
 
