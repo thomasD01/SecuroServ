@@ -29,13 +29,12 @@ export class AppService {
       scope: string, 
       refresh_token: string
     }>{
-    
     const request = await getRequest(code);
     return Promise.resolve({
       access_token: request?.access_token!,
       token_type: 'bearer',
       expires_in: 3600,
-      scope: '',
+      scope: 'identity',
       refresh_token: request?.refresh_token!
     });
   }

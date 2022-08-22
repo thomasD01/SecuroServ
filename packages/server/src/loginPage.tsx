@@ -76,7 +76,12 @@ export class LoginPage extends React.Component<Props, State> {
           autoClose: 3000
         })
         const redirect_uri = document.getElementById('redirect_uri')?.className;
-        await fetch(redirect_uri+`?code=${res.code}`);
+        const response = await fetch(redirect_uri+`?code=${res.code}`,{
+          headers:{
+            'Access-Control-Allow-Origin':'*'
+          }
+        });
+        console.log('res: ',response);
       }
     } catch (error) {
       toast.update(id, {
@@ -94,7 +99,7 @@ export class LoginPage extends React.Component<Props, State> {
         <div id='redirect_uri' className={this.props.redirect_uri}/>
         <div className="page justify-center items-center">
           <div className="container">
-            <img src="/SecuroServLogo.png" height="200px" width="200px"></img>
+            <img src="/img/SecuroServLogo.png" height="200px" width="200px"></img>
             <h1>Please log in</h1>
             <div className="inputs">
               <div className="input">

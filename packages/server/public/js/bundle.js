@@ -15,7 +15,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 //@ts-ignore
 ReactDOMClient.hydrateRoot(document.getElementById('root'), /*#__PURE__*/React.createElement(_loginPage.LoginPage, null));
-},{"./loginPage":"/Users/thomas/Repos/SecuroServ/packages/server/bundle/loginPage.js","react":16,"react-dom/client":10}],"/Users/thomas/Repos/SecuroServ/packages/server/bundle/loginPage.js":[function(require,module,exports){
+},{"./loginPage":"D:\\Repos\\SecuroServ\\packages\\server\\bundle\\loginPage.js","react":16,"react-dom/client":10}],"D:\\Repos\\SecuroServ\\packages\\server\\bundle\\loginPage.js":[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -88,7 +88,7 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "submit", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var id, res, _document$getElementB, redirect_uri;
+      var id, res, _document$getElementB, redirect_uri, response;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -114,7 +114,7 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
                 autoClose: 3000
               });
 
-              _context.next = 13;
+              _context.next = 15;
               break;
 
             case 9:
@@ -127,14 +127,22 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
 
               redirect_uri = (_document$getElementB = document.getElementById('redirect_uri')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.className;
               _context.next = 13;
-              return fetch(redirect_uri + "?code=".concat(res.code));
+              return fetch(redirect_uri + "?code=".concat(res.code), {
+                headers: {
+                  'Access-Control-Allow-Origin': '*'
+                }
+              });
 
             case 13:
-              _context.next = 18;
-              break;
+              response = _context.sent;
+              console.log('res: ', response);
 
             case 15:
-              _context.prev = 15;
+              _context.next = 20;
+              break;
+
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](1);
 
               _reactToastify.toast.update(id, {
@@ -144,12 +152,12 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
                 autoClose: 3000
               });
 
-            case 18:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[1, 15]]);
+      }, _callee, null, [[1, 17]]);
     })));
 
     _this.state = {
@@ -255,7 +263,7 @@ var LoginPage = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         className: "container"
       }, /*#__PURE__*/React.createElement("img", {
-        src: "/SecuroServLogo.png",
+        src: "/img/SecuroServLogo.png",
         height: "200px",
         width: "200px"
       }), /*#__PURE__*/React.createElement("h1", null, "Please log in"), /*#__PURE__*/React.createElement("div", {

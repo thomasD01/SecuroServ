@@ -48,7 +48,9 @@ export class AppController {
     },
     @Res() response: Response
   ){
+    console.log(body)
     const token = await this.appService.getAccessToken(body.code);
-    return response.status(200).send(JSON.stringify(token)).end();
+    console.log(token);
+    return response.status(200).send(token).end();
   }
 }

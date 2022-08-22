@@ -23,7 +23,7 @@ async function bootstrap() {
   .add(join(__dirname, 'bundle/client.js'))
   .require(join(__dirname, 'bundle/loginPage.js'))
   .bundle()
-  .pipe(createWriteStream(join(__dirname, 'public/bundle.js')));
+  .pipe(createWriteStream(join(__dirname, 'public/js/bundle.js')));
 
   await app.listen(3001);
 
