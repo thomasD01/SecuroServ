@@ -1,41 +1,57 @@
-import { Provider } from "next-auth/providers";
+import { CredentialsConfig } from "next-auth/providers";
 
-const provider = (clientId: string, clientSecret: string): Provider => {
-  let auth_url = 'http://localhost:3001/oauth/authorize';
+type User = {}
+
+const provider = (): CredentialsConfig=> {
+  let auth_url = 'http://localhost:3001/auth/authorize';
   let token_url = 'http://localhost:3001/oauth/token';
   let info_url = 'http://localhost:3001/user/info';
   if (process.env.NODE_ENV === 'production') {
-    auth_url = `${process.env.OAUTH_URL}/oauth/authorize`;
+    auth_url = `${process.env.OAUTH_URL}/auth/authorize`;
     token_url = `${process.env.OAUTH_URL}/oauth/token`;
     info_url = `${process.env.OAUTH_URL}/user/info`;
   }
   return {
-    id: 'securoserv',
     name: 'SecuroServ',
-    type: 'oauth',
-    version: '2.0',
-    authorization: {
-      url: auth_url,
-      params: {scope: 'identity'}
-    },
-    token: {
-      url: token_url,
-      params: {}
-    },
-    userinfo: {
-      url: info_url,
-      params: {}
-    },
-    clientId,
-    clientSecret,
-    profile(profile) {
-      return {
-        id: profile.id,
-        name: profile.name,
-        prename: profile.prename,
-        username: profile.username,
-        email: profile.email
+    id: 'securoserv',
+    type: 'credentials',
+    credentials: {
+      username: {
+        label: 'Username',
+        type: 'text'
+      },
+      password: {
+        label: 'Password',
+        type: 'password'
       }
+    },
+    async authorize(credentials): Promise<User| null>{
+      return new Promise(async function(resolve, reject){
+        try{
+          if(!credentials){
+            resolve(null);
+            return;
+          }
+          const res = await fetch(auth_url, {
+            method: 'POST',
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password
+            })
+          })
+          const decodedRes = await res.json();
+          if(decodedRes.access_token){
+            
+          }
+          resolve(null);
+        }
+        catch(error){
+          if(isDev){
+            console.error(error);
+          }
+          reject('error authenticating user');
+        }
+      })
     }
   }
 }

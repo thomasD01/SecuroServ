@@ -4,7 +4,7 @@ import SecuroServProvider from '../../../securoServProvider'
 
 export default NextAuth({
   providers: [
-    SecuroServProvider(process.env.OAUTH_CLIENT_ID,process.env.OAUTH_SECRET)
+    SecuroServProvider()
   ],
   session: {
     strategy: 'jwt',

@@ -7,6 +7,7 @@ declare global{
       OAUTH_SECRET: string;
     }
   }
+  const isDev: boolean = process.env.NODE_ENV !== 'production';
 }
 
 export {} 

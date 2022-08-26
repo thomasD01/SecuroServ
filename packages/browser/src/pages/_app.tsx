@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 
 import '../index.css'
 import 'react-toastify/dist/ReactToastify.css'
+import '../../public/login.css'
 import makeStore from '../redux/store'
 
 function App({

@@ -1,8 +1,12 @@
-import React, { Component } from 'react'
-import { MetaTags } from '@redwoodjs/web'
+import { signIn, SignInResponse } from 'next-auth/react';
+import { Router, withRouter } from 'next/router';
+import * as React from 'react'
+import * as ReactDOMServer from 'react-dom/server';
 import { ToastContainer, toast } from 'react-toastify'
 
-type Props = {}
+type Props = {
+  router: Router;
+}
 type State = {
   version: string;
   userInput: string;
@@ -10,58 +14,44 @@ type State = {
   showPass: boolean;
 }
 
-export default class HomePage extends Component<Props, State> {
-  constructor(props: Props){
+class LoginPage extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state={
-      version:'1.0',
+    this.state = {
+      version: '1.0',
       userInput: 'TDAdmin',
       passInput: '123456789',
       showPass: false
     }
   }
-  editUsername:React.ChangeEventHandler<HTMLInputElement>=(event)=>{
-    this.setState({userInput: event.target.value});
+  editUsername: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    this.setState({ userInput: event.target.value });
   }
-  editPassword:React.ChangeEventHandler<HTMLInputElement>=(event)=>{
-    this.setState({passInput: event.target.value});
+  editPassword: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    this.setState({ passInput: event.target.value });
   }
 
   /**
    * create Promise for toast notification to display information about login status
    * @returns JWT as string
    */
-  async sendLogin(username:string, password:string): Promise<{auth:string,refresh:string}|null>{
-    return new Promise<{auth:string,refresh:string}|null>(async function(resolve, reject){
-      setTimeout(() => reject(), 10000);
-      const res = await fetch('http://127.0.0.1:3000/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          username: username,
-          password: password
-        }),
-        headers: {
-          'Content-type': 'application/json'
-        }
+  async sendLogin(username: string, password: string): Promise<SignInResponse | undefined> {
+    return new Promise<SignInResponse | undefined>(async function (resolve, reject) {
+      setTimeout(()=>reject(), 10000);
+      const response = await signIn<'credentials'>('securoserv', {
+        redirect: false,
+        username,
+        password
       })
-      const decodedRes = await res.json();
-      console.log('peter',decodedRes)
-      if(decodedRes.auth_token && decodedRes.refresh_token){
-        resolve({
-          auth: decodedRes.auth_token,
-          refresh:decodedRes.refresh_token
-        })
-        return;
-      }
-      resolve(null);
+      resolve(response);
     });
   }
 
-  submit = async ()=>{
+  submit = async () => {
     const id = toast.loading('attempting login');
-    try{
+    try {
       const res = await this.sendLogin(this.state.userInput, this.state.passInput);
-      if(res === null){
+      if (res == null) {
         toast.update(id, {
           type: toast.TYPE.ERROR,
           render: 'wrong credentials',
@@ -75,9 +65,12 @@ export default class HomePage extends Component<Props, State> {
           isLoading: false,
           autoClose: 3000
         })
-        //Save JWT and redirect to home
+        setTimeout(()=>{
+          this.props.router.push('/home')
+        }, 1500)
       }
-    } catch(error){
+    } catch (error) {
+      console.error(error);
       toast.update(id, {
         type: toast.TYPE.WARNING,
         render: 'timeout, please try again',
@@ -90,44 +83,42 @@ export default class HomePage extends Component<Props, State> {
   render() {
     return (
       <>
-        <MetaTags title="Login" description="HoLoginme page" />
-        <div className="page justify-center items-center bg-[#000c1f]">
-          <div 
-            className="h-[500px] w-[550px] shadow-xl flex border-t-4 
-                     border-t-red-600 bg-[#222222] flex-col items-center text-white"
-          >
-            <img src="img/SecuroServLogo.png" height="200px" width="200px"></img>
-            <h1 className="text-2xl">Please log in</h1>
-            <div className="flex-col flex justify-evenly h-[50%] w-full px-[15%]">
-              <div className="w-full flex flex-row justify-between text-2xl">
+        <div className="page justify-center items-center">
+          <div className="container">
+            <img src="/img/SecuroServLogo.png" height="200px" width="200px"></img>
+            <h1>Please log in</h1>
+            <div className="inputs">
+              <div className="input">
                 Username
-                <input 
-                  className="w-[70%] bg-[#666666] pl-2 text-xl" 
+                <input
+                  className="inputField"
                   type="text"
                   value={this.state.userInput}
                   onChange={this.editUsername}
                 />
               </div>
-              <div className="w-full flex flex-row justify-between text-2xl">
-                Password 
+              <div className="input">
+                Password
                 <input
-                  className="w-[70%] bg-[#666666] pl-2 text-xl"
-                  type={this.state.showPass?'text':'password'}
+                  className="inputField"
+                  type={this.state.showPass ? 'text' : 'password'}
                   value={this.state.passInput}
                   onChange={this.editPassword}
-                  />
+                />
               </div>
-              <div className="text-white flex flex-row justify-between w-full">
+              <div className="footer">
                 Version {this.state.version}
-                <button className="bg-red-600 text-xl px-4 py-1" onClick={this.submit}>
+                <button className="button" onClick={this.submit}>
                   Log In
                 </button>
               </div>
             </div>
           </div>
-          <ToastContainer theme='dark'/>
+          <ToastContainer theme='dark' />
         </div>
       </>
     )
   }
 }
+
+export default withRouter(LoginPage);
