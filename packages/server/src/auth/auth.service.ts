@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { createHmac } from 'crypto'
 import { JwtService } from '@nestjs/jwt';
-import { randomBytes } from 'crypto'
 
 import { UsersService } from './users/users.service';
 import type { Payload } from '../../enviroment';
-import { createRequest, getRefreshToken, getRequest } from '../db/database';
+import { getRefreshToken } from '../db/database';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService
   ) { }
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string): Promise<Payload|null> {
     const user = await this.usersService.findOne(username);
     if (user && user.password === hashPass(password, username)) {
       let result: Payload = {
@@ -32,29 +31,24 @@ export class AuthService {
   /*************************************************************************************************
    * Login/Logout                                                                                  *
    *************************************************************************************************/
-  async login(payload: Payload): Promise<{ code: string }> {
+  async login(username: string, password: string): Promise<{ authToken: string, refreshToken: string } | null> {
     try {
-      let code: string | null = null;
-      while (code === null) {
-        let tmp = randomBytes(32).toString('base64');
-        console.log(tmp);
-        let response = await getRequest(tmp);
-        if (response === null) {
-          code = tmp;
-        }
+      const payload = await this.validateUser(username, password);
+      
+      if(!payload){
+        return null;
       }
-      const request = await createRequest(
-        code,
-        this.generateAuthToken(payload),
-        this.generateRefreshToken(payload)
-      )
-      return { code: request.code }
+      return {
+        authToken: this.generateAuthToken(payload),
+        refreshToken: this.generateRefreshToken(payload)
+      }
     }
     catch (error) {
       console.error(error);
-      return { code:'' }
+      return null;
     }
   }
+
   async logout(payload: Payload): Promise<boolean> {
     try {
       await this.usersService.deleteToken(payload.id);

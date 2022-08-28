@@ -18,32 +18,9 @@ export async function getRefreshToken(clientID: number) {
   return Promise.reject('nothing found');
 }
 
-export async function getRequest(code: string) {
-  const result = await prismaClient.access_Request.findUnique({
-    where: { code: code }
-  })
-  return Promise.resolve(result);
-}
-
-export async function getAndDeleteRequest(code: string) {
-  const result = await getRequest(code);
-
-  if(result){
-    const deleted = await prismaClient.access_Request.delete({
-      where: { code: result.code }
-    })
-    return Promise.resolve(deleted);
-  }
-  return Promise.reject('nothing found');
-}
-
-export async function createRequest(code: string, access_token: string, refresh_token: string){
-  const result = await prismaClient.access_Request.create({
-    data: {
-      code,
-      access_token,
-      refresh_token
-    }
+export async function getUser(username: string){
+  const result = await prismaClient.user.findUnique({
+    where: { username: username }
   })
   if(result){
     return Promise.resolve(result);

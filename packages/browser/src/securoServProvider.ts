@@ -3,12 +3,12 @@ import { CredentialsConfig } from "next-auth/providers";
 type User = {}
 
 const provider = (): CredentialsConfig=> {
-  let auth_url = 'http://localhost:3001/auth/authorize';
-  let token_url = 'http://localhost:3001/oauth/token';
+  let auth_url = 'http://localhost:3001/auth/login';
+  let token_url = 'http://localhost:3001/auth/token';
   let info_url = 'http://localhost:3001/user/info';
   if (process.env.NODE_ENV === 'production') {
-    auth_url = `${process.env.OAUTH_URL}/auth/authorize`;
-    token_url = `${process.env.OAUTH_URL}/oauth/token`;
+    auth_url = `${process.env.OAUTH_URL}/auth/login`;
+    token_url = `${process.env.OAUTH_URL}/auth/token`;
     info_url = `${process.env.OAUTH_URL}/user/info`;
   }
   return {
