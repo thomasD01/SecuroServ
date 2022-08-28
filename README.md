@@ -1,5 +1,5 @@
 # SecuroServ
-management Software in the Sale of GTA onlines Secure Serv
+management Software in the style of GTA onlines Secure Serv
 
 # Structure
 This Monorepo contains everything related to SecuroServ in its own packages
