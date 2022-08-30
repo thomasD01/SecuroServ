@@ -2,12 +2,11 @@
 declare global{
   namespace NodeJS {
     interface ProcessEnv {
-      OAUTH_URL: string;
-      OAUTH_CLIENT_ID: string;
-      OAUTH_SECRET: string;
+      AUTH_URL: string;
+      AUTH_CLIENT_ID: string;
+      AUTH_SECRET: string;
     }
   }
-  const isDev: boolean = process.env.NODE_ENV !== 'production';
 }
 
 export {} 

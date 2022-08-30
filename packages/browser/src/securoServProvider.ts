@@ -1,16 +1,22 @@
-import { CredentialsConfig } from "next-auth/providers";
+import { Provider } from "next-auth/providers";
 
-type User = {}
+type User = {
+  id: string;
+  name: string;
+  prename: string;
+  username: string;
+  email: string;
+  authToken?: string;
+  refreshToken?: string;
+}
 
-const provider = (): CredentialsConfig=> {
-  let auth_url = 'http://localhost:3001/auth/login';
-  let token_url = 'http://localhost:3001/auth/token';
-  let info_url = 'http://localhost:3001/user/info';
-  if (process.env.NODE_ENV === 'production') {
-    auth_url = `${process.env.OAUTH_URL}/auth/login`;
-    token_url = `${process.env.OAUTH_URL}/auth/token`;
-    info_url = `${process.env.OAUTH_URL}/user/info`;
-  }
+let isDev = process.env.NODE_ENV !== 'production';
+
+const auth_url  = isDev ? 'http://localhost:3001/auth/login': `${process.env.AUTH_URL}/auth/login`;
+const token_url = isDev ? 'http://localhost:3001/auth/token': `${process.env.AUTH_URL}/auth/token`;
+const info_url  = isDev ? 'http://localhost:3001/user/info' : `${process.env.AUTH_URL}/user/info`;
+
+const provider = (): Provider=> {
   return {
     name: 'SecuroServ',
     id: 'securoserv',
@@ -25,35 +31,52 @@ const provider = (): CredentialsConfig=> {
         type: 'password'
       }
     },
-    async authorize(credentials): Promise<User| null>{
-      return new Promise(async function(resolve, reject){
-        try{
-          if(!credentials){
-            resolve(null);
-            return;
-          }
-          const res = await fetch(auth_url, {
-            method: 'POST',
-            body: JSON.stringify({
-              username: credentials.username,
-              password: credentials.password
-            })
-          })
-          const decodedRes = await res.json();
-          if(decodedRes.access_token){
-            
-          }
-          resolve(null);
-        }
-        catch(error){
-          if(isDev){
-            console.error(error);
-          }
-          reject('error authenticating user');
-        }
-      })
+    authorize: authorize
+  }
+}
+export default provider;
+
+async function authorize(credentials: Record<string, string>|undefined): Promise<User|null>{
+  try{
+    if(!credentials){
+      return null;
     }
+    const res = await fetch(auth_url, {
+      method: 'POST',
+      body: JSON.stringify({
+        username: credentials.username,
+        password: credentials.password
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const decodedRes : {
+      authToken: string|null,
+      refreshToken: string|null
+    } = await res.json();
+    if(decodedRes.authToken && decodedRes.refreshToken){
+      let user:User = await(await fetch(info_url,{
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${decodedRes.authToken}`
+        }
+      })).json();
+
+      user = { 
+        ...user,
+        authToken: decodedRes.authToken,
+        refreshToken: decodedRes.refreshToken
+      }
+      return user;             
+    }
+    return null;
+  }
+  catch(error){
+    if(isDev){
+      console.error(error);
+    }
+    return null;
   }
 }
 
-export default provider;

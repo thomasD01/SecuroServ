@@ -1,15 +1,24 @@
 import { Session } from 'next-auth';
+import { NextRouter } from 'next/router';
 import React, { Component } from 'react'
 
-import { withGuard } from '../guard';
+import { withGuard, withRouter } from '../wrapper';
 
 type Props = {
   session: Session;
+  router: NextRouter;
 }
 type State = {}
 
 class Home extends Component<Props, State> {
-  state = {}
+  constructor(props: Props){
+    super(props);
+    this.state={};
+  }
+
+  componentDidMount(){
+    
+  }
 
   render() {
     return (
@@ -18,4 +27,4 @@ class Home extends Component<Props, State> {
   }
 }
 
-export default withGuard(Home);
+export default withGuard(withRouter(Home));

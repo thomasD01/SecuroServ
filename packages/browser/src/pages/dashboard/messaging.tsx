@@ -1,6 +1,6 @@
 import { Session } from 'next-auth'
 import React, { Component } from 'react'
-import { withGuard } from '../../guard'
+import { withGuard } from '../../wrapper'
 
 type Props = {
   session: Session;

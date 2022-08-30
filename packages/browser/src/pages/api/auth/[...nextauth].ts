@@ -1,8 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth from "next-auth"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 
 import SecuroServProvider from '../../../securoServProvider'
+import database from "../../../db/database";
 
 export default NextAuth({
+  adapter: PrismaAdapter(database),
   providers: [
     SecuroServProvider()
   ],
@@ -11,14 +14,22 @@ export default NextAuth({
     maxAge: 60*5
   },
   callbacks: {
-    async jwt({token, account}){
-      if(account){
-        token.access_token = account.access_token
+    async jwt({
+      token, 
+      user
+    }){
+
+      if(user){
+        token.user = user;
       }
       return token;
     },
-    async session({session, token, user}) {
-      session.access_token = token.access_token;
+    async session({
+      session,
+      token
+    }){
+      //@ts-ignore
+      session.user = token.user;
       console.log(session);
       return session;
     }

@@ -6,7 +6,7 @@ import { join } from 'path'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { UsersModule } from './auth/users/users.module'
+import { UsersModule } from './users/users.module'
 import { OrgaModule } from './orga/orga.module'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard'
